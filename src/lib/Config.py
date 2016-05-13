@@ -1,6 +1,6 @@
 # coding=utf-8
 '''
-Created on 2015å¹?5æœ?22æ—?
+Created on 2015ï¿½?5ï¿½?22ï¿½?
 
 @author: xiaoyong.mo
 '''
@@ -9,3 +9,4 @@ PROCESS_SWITCH = True
 
 # æ—¥å¿—é…ç½®
 LOG_SCREEN_LEVEL = 'info'
+LOG_PATH = '../log'

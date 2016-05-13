@@ -30,17 +30,17 @@ $(function() {
 
 	$('body').swipeleft(function() {
 		if (lock == '') {
-			run('left');
+			runNeck('left');
 			lock = 'x';
 		}
 	}).swiperight(function() {
 		if (lock == '') {
-			run('right');
+			runNeck('right');
 			lock = 'x';
 		}
 	}).touchend(function() {
 		if (lock != '') {
-			stop(lock);
+			stopNeck(lock);
 			lock = '';
 		}
 	});

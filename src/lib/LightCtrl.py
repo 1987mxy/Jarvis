@@ -6,13 +6,12 @@ Created on 2014年2月24日
 '''
 
 import serial
-from time import sleep
 from struct import pack, unpack
 
 moduleAddress = 1
 portNumber = 2
 
-class ControlRelay:
+class LightCtrl:
 	def __init__(self, module, port):
 		self.module = module
 		self.port = port - 1
@@ -66,7 +65,7 @@ class ControlRelay:
 		self.genPackage(0x10, data)
 		self.send()
 		self.reset()
-		data = self.receive()
+		return self.receive()
 		
 	def singlePowerOn(self, linkNum):
 		data = [0] * 4
@@ -82,8 +81,3 @@ class ControlRelay:
 		self.genPackage(0x01, data)
 		self.send()
 		self.reset()
-
-if __name__ == '__main__':
-	comm = ControlRelay(1, 3)
-	comm.allPowerOn()
-	comm.allPowerOff()

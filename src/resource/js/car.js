@@ -37,9 +37,9 @@ $(function() {
 	});
 
 	$('.direct-btn').mousedown(function() {
-		run($(this).attr('id'));
+		runNeck($(this).attr('id'));
 	}).mouseup(function() {
 		var direct = $(this).attr('id')
-		stop((direct == 'left' || direct == 'right') ? 'x' : 'y');
+		stopNeck((direct == 'left' || direct == 'right') ? 'x' : 'y');
 	});
 });

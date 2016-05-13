@@ -8,7 +8,7 @@ Created on 2016年4月14日
 import time, os
 from BaseHTTPServer import BaseHTTPRequestHandler
 
-import Eye, Neck
+import Eye, Neck, LightCtrl
 
 
 class Brain(BaseHTTPRequestHandler):
@@ -18,9 +18,9 @@ class Brain(BaseHTTPRequestHandler):
 	ctrlCache = {}
 	cmdList = ['showCtrl', 'neck', 'eye']
 	myNeck = Neck.Neck()
+	myLightCtrl = LightCtrl.LightCtrl()
 	
 	def do_GET(self):
-		print self.path
 		pathList = self.path.split('/')
 		filename = './resource' + self.path
 		if os.path.isfile(filename):
@@ -28,6 +28,8 @@ class Brain(BaseHTTPRequestHandler):
 			if ext == '.css':
 				self.send_header('Content-type','text/css')
 			self.wfile.write(self._readFile(filename))
+		elif len(pathList) < 2 or not pathList[1]:
+			self.showCtrl()
 		elif pathList[1] in self.cmdList:
 			cmd = 'self.' + pathList[1]
 			if len(pathList) > 2:
@@ -38,13 +40,22 @@ class Brain(BaseHTTPRequestHandler):
 		else:
 			self.send_response(404)
 		
- 	def showCtrl(self):
- 		userAgent = self.headers.get('User-Agent').lower()
- 		if userAgent != None and ('ipad' in userAgent or 'iphone' in userAgent or 'android' in userAgent):
- 			indexHtml = self._readFile('./resource/index.html')
- 		else:
- 			indexHtml = self._readFile('./resource/index.mobile.html')
+	def showCtrl(self):
+		userAgent = self.headers.get('User-Agent').lower()
+		if userAgent != None and ('ipad' in userAgent or 'iphone' in userAgent or 'android' in userAgent):
+			indexHtml = self._readFile('./resource/index.html')
+		else:
+			indexHtml = self._readFile('./resource/index.mobile.html')
 		self.wfile.write(indexHtml)
+	
+	def light(self, action):
+		if len(action) > 0:
+			if action[0] == 'status':
+				self.myLightCtrl.status()
+			elif action[0] == 'singlePowerOn' and len(action) >= 2:
+				self.myLightCtrl.singlePowerOn(action[1])
+			elif action[0] == 'singlePowerOff' and len(action) >= 2:
+				self.myLightCtrl.singlePowerOff(action[1])
 	
 	def neck(self, action):
 		if len(action) > 0:
