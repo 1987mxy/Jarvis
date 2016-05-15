@@ -8,20 +8,17 @@ Created on 2014年2月24日
 import serial
 from struct import pack, unpack
 
-moduleAddress = 1
-portNumber = 2
-
 class LightCtrl:
 	def __init__(self, module, port):
 		self.module = module
-		self.port = port - 1
+		self.port = port
 		self.package = None
 		self.comm = None
-		self.connect()
+# 		self.connect()
 
 	def connect(self):
 		if self.comm == None:
-			self.comm = serial.Serial(portNumber)
+			self.comm = serial.Serial(self.port)
 	
 	def send(self):
 		self.comm.write(self.package)
@@ -51,33 +48,43 @@ class LightCtrl:
 		data = [0] * 4
 		data[2:] = [0xff, 0xff]
 		self.genPackage(0x13, data)
+		self.connect()
 		self.send()
 		self.reset()
+		self.close()
 	
 	def allPowerOff(self):
 		data = [0] * 4
 		self.genPackage(0x13, data)
+		self.connect()
 		self.send()
 		self.reset()
+		self.close()
 	
 	def status(self):
 		data = [0] * 4
 		self.genPackage(0x10, data)
+		self.connect()
 		self.send()
 		self.reset()
-		return self.receive()
+		status = self.receive()
+		self.close()
+		return status
 		
 	def singlePowerOn(self, linkNum):
 		data = [0] * 4
 		data[linkNum - 1] = 2
 		self.genPackage(0x01, data)
-		print self.package.__repr__()
+		self.connect()
 		self.send()
 		self.reset()
+		self.close()
 	
 	def singlePowerOff(self, linkNum):
 		data = [0] * 4
 		data[linkNum - 1] = 1
 		self.genPackage(0x01, data)
+		self.connect()
 		self.send()
 		self.reset()
+		self.close()

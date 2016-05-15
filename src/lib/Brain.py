@@ -8,7 +8,7 @@ Created on 2016年4月14日
 import time, os
 from BaseHTTPServer import BaseHTTPRequestHandler
 
-import Eye, Neck, LightCtrl
+import Eye, Neck, LightCtrl, Config
 
 
 class Brain(BaseHTTPRequestHandler):
@@ -16,18 +16,23 @@ class Brain(BaseHTTPRequestHandler):
 	大脑，控制一切
 	'''
 	ctrlCache = {}
-	cmdList = ['showCtrl', 'neck', 'eye']
+	cmdList = ['showCtrl', 'neck', 'eye', 'light']
 	myNeck = Neck.Neck()
-	myLightCtrl = LightCtrl.LightCtrl()
+	myLightCtrl = LightCtrl.LightCtrl(1, Config.LIGHT_DEV)
 	
 	def do_GET(self):
+		print self.path
 		pathList = self.path.split('/')
 		filename = './resource' + self.path
 		if os.path.isfile(filename):
+			respContent = self._readFile(filename)
+			respHeaders = {}
 			ext = os.path.splitext(filename)[-1]
 			if ext == '.css':
-				self.send_header('Content-type','text/css')
-			self.wfile.write(self._readFile(filename))
+				respHeaders['content-type'] = 'text/css'
+			elif ext == '.js':
+				respHeaders['content-type'] = 'application/javascript'
+			self._httpSuccess(respContent, respHeaders)
 		elif len(pathList) < 2 or not pathList[1]:
 			self.showCtrl()
 		elif pathList[1] in self.cmdList:
@@ -38,35 +43,40 @@ class Brain(BaseHTTPRequestHandler):
 			else:
 				eval(cmd)()
 		else:
-			self.send_response(404)
+			self._httpNotFound()
 		
 	def showCtrl(self):
 		userAgent = self.headers.get('User-Agent').lower()
 		if userAgent != None and ('ipad' in userAgent or 'iphone' in userAgent or 'android' in userAgent):
-			indexHtml = self._readFile('./resource/index.html')
-		else:
 			indexHtml = self._readFile('./resource/index.mobile.html')
-		self.wfile.write(indexHtml)
+		else:
+			indexHtml = self._readFile('./resource/index.html')
+		self._httpSuccess(indexHtml)
 	
 	def light(self, action):
 		if len(action) > 0:
 			if action[0] == 'status':
-				self.myLightCtrl.status()
+				lightStatus = self.myLightCtrl.status()
+				self._httpSuccess(lightStatus[6])
 			elif action[0] == 'singlePowerOn' and len(action) >= 2:
-				self.myLightCtrl.singlePowerOn(action[1])
+				linkNum = int(action[1])
+				self.myLightCtrl.singlePowerOn(linkNum)
+				self._httpSuccess()
 			elif action[0] == 'singlePowerOff' and len(action) >= 2:
-				self.myLightCtrl.singlePowerOff(action[1])
+				linkNum = int(action[1])
+				self.myLightCtrl.singlePowerOff(linkNum)
+				self._httpSuccess()
 	
 	def neck(self, action):
 		if len(action) > 0:
 			cmd = 'self.myNeck.' + action[0]
 			eval(cmd)()
-			self.send_response(200)
+			self._httpSuccess()
 	
 	def eye(self):
 		Eye.Eye.getInstance()
 		self.send_response(200)
-		self.send_header('Pragma', 'no-cache');
+		self.send_header('Pragma', 'no-cache')
 		self.send_header('Cache-Control', 'no-cache')
 		self.send_header('Content-Encoding', 'identify')
 		self.send_header('Content-Type', 'multipart/x-mixed-replace;boundary=jpgboundary')
@@ -80,7 +90,7 @@ class Brain(BaseHTTPRequestHandler):
 				self.wfile.write(stream)
 				self.wfile.write('--jpgboundary\r\n')
 				self.send_response(200)
-				time.sleep(0.02)
+				time.sleep(0.04)
 		except IOError as e:
 			if hasattr(e, 'errno') and e.errno == 32:
 				print 'Error: broken pipe'
@@ -88,6 +98,23 @@ class Brain(BaseHTTPRequestHandler):
 				return
 			else:
 				raise e
+	
+	def _httpSuccess(self, content = None, headers = None):
+		self.send_response(200)
+		if content != None:
+			if headers == None:
+				self.send_header('content-type', 'text/html')
+			else:
+				for headerKey in headers.keys():
+					self.send_header(headerKey, headers[headerKey])
+			self.end_headers()
+			self.wfile.write(content)
+		
+	def _httpFail(self):
+		self.send_response(500)
+		
+	def _httpNotFound(self):
+		self.send_response(404)
 	
 	def _readFile(self, filename):
 		if filename not in self.ctrlCache.keys():

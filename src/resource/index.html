@@ -4,23 +4,34 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=Edge">
 <title>WIFI CAR PC</title>
+<link rel="stylesheet" href="./css/bootstrap.min.css">
+<link rel="stylesheet" href="./css/bootstrap-switch.min.css">
+
 <script src="./js/lib/jquery-2.2.3.min.js"></script>
 <script src="./js/lib/bootstrap.min.js"></script>
-<link rel="stylesheet" href="./css/bootstrap.min.css">
+<script src="./js/lib/bootstrap-switch.min.js"></script>
 
 <!-- myself -->
 <script src="./js/config.js"></script>
 <script src="./js/lib.js"></script>
 <script src="./js/car.js"></script>
-
+<script src="./js/light.js"></script>
 </head>
 <body>
 	<ul class="nav nav-tabs nav-justified" role="tablist">
 		<li role="presentation">
-			<a href="#car" aria-controls="car" role="tab" data-toggle="tab">car</a>
+			<a href="#car" aria-controls="car" role="tab" data-toggle="tab">
+				<h2>
+					<span class="glyphicon glyphicon-eye-open" aria-hidden="true" aria-label="car"></span>
+				</h2>
+			</a>
 		</li>
 		<li role="presentation">
-			<a href="#light" aria-controls="light" role="tab" data-toggle="tab">light</a>
+			<a href="#light" aria-controls="light" role="tab" data-toggle="tab">
+				<h2>
+					<span class="glyphicon glyphicon-lamp" aria-hidden="true" aria-label="light"></span>
+				</h2>
+			</a>
 		</li>
 	</ul>
 	<div class="tab-content">
@@ -64,45 +75,40 @@
 		<!-- 车控制 -->
 		<!-- 灯控制 -->
 		<div role="tabpanel" class="tab-pane fade" id="light">
-			<!-- 开关1 -->
-			<div class="switch" data-switch-no="1" class="btn-group" data-toggle="buttons">
-				<label class="btn btn-primary">
-					<input type="radio" name="switch1" class="open" autocomplete="off">on
-				</label>
-				<label class="btn btn-primary">
-					<input type="radio" name="switch1" class="close" autocomplete="off">off
-				</label>
-			</div>
-			<!-- 开关2 -->
-			<div class="switch" data-switch-no="2" class="btn-group" data-toggle="buttons">
-				<label class="btn btn-primary">
-					<input type="radio" name="switch2" class="open" autocomplete="off">on
-				</label>
-				<label class="btn btn-primary">
-					<input type="radio" name="switch2" class="close" autocomplete="off">off
-				</label>
-			</div>
-			<!-- 开关3 -->
-			<div class="switch" data-switch-no="3" class="btn-group" data-toggle="buttons">
-				<label class="btn btn-primary">
-					<input type="radio" name="switch3" class="open" autocomplete="off">on
-				</label>
-				<label class="btn btn-primary">
-					<input type="radio" name="switch3" class="close" autocomplete="off">off
-				</label>
-			</div>
-			<!-- 开关4 -->
-			<div class="switch" data-switch-no="4" class="btn-group" data-toggle="buttons">
-				<label class="btn btn-primary">
-					<input type="radio" name="switch4" class="open" autocomplete="off">on
-				</label>
-				<label class="btn btn-primary">
-					<input type="radio" name="switch4" class="close" autocomplete="off">off
-				</label>
-			</div>
+			<p>
+				<dl class="dl-horizontal">
+					<!-- 开关1 -->
+					<dt><h4>开关1</h4></dt>
+					<dd>
+						<p class="switch switch-large">
+							<input id="switch1" class="light-switch" data-switch-no="1" type="checkbox" />
+						</p>
+					</dd>
+					<!-- 开关2 -->
+					<dt><h4>开关2</h4></dt>
+					<dd>
+						<p class="switch switch-large">
+							<input id="switch2" class="light-switch" data-switch-no="2" type="checkbox" />
+						</p>
+					</dd>
+					<!-- 开关3 -->
+					<dt><h4>开关3</h4></dt>
+					<dd>
+						<p class="switch switch-large">
+							<input id="switch3" class="light-switch" data-switch-no="3" type="checkbox" />
+						</p>
+					</dd>
+					<!-- 开关4 -->
+					<dt><h4>开关4</h4></dt>
+					<dd>
+						<p class="switch switch-large">
+							<input id="switch4" class="light-switch" data-switch-no="4" type="checkbox" />
+						</p>
+					</dd>
+				</dl>
+			</p>
 		</div>
 		<!-- 灯控制 -->
 	</div>
-	
 </body>
 </html>
