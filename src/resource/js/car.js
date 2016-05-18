@@ -7,39 +7,71 @@
 // left,37
 // right,39
 var directKeyCode = {
-	38 : 'up',
-	40 : 'down',
-	37 : 'left',
-	39 : 'right'
+	38 : 'neckUp',
+	40 : 'neckDown',
+	37 : 'neckLeft',
+	39 : 'neckRight',
+	
+	87 : 'footUp',		//w
+	83 : 'footDown',	//s
+	65 : 'footLeft',	//a
+	68 : 'footRight'	//d
 };
 
-var xLock = '';
-var yLock = '';
+var xNeckLock = '',
+	yNeckLock = '',
+	xFootLock = '',
+	yFootLock = '';
 $(function() {
 	$(document).keydown(function(event) {
 		direct = directKeyCode[event.which];
-		if ((direct == 'left' || direct == 'right') && xLock == '') {
+		//neck
+		if ((direct == 'neckLeft' || direct == 'neckRight') && xNeckLock == '') {
 			$('#' + direct).button('toggle').mousedown();
-			xLock = direct;
-		} else if ((direct == 'up' || direct == 'down') && yLock == '') {
+			xNeckLock = direct;
+		} else if ((direct == 'neckUp' || direct == 'neckDown') && yNeckLock == '') {
 			$('#' + direct).button('toggle').mousedown();
-			yLock = direct;
+			yNeckLock = direct;
+		}
+		//foot
+		else if ((direct == 'footLeft' || direct == 'footRight') && xFootLock == '') {
+			$('#' + direct).button('toggle').mousedown();
+			xFootLock = direct;
+		} else if ((direct == 'footUp' || direct == 'footDown') && yFootLock == '') {
+			$('#' + direct).button('toggle').mousedown();
+			yFootLock = direct;
 		}
 	}).keyup(function(event) {
 		direct = directKeyCode[event.which];
-		if ((direct == 'left' || direct == 'right') && xLock == direct) {
+		//neck
+		if ((direct == 'neckLeft' || direct == 'neckRight') && xNeckLock == direct) {
 			$('#' + direct).button('toggle').mouseup();
-			xLock = '';
-		} else if ((direct == 'up' || direct == 'down') && yLock == direct) {
+			xNeckLock = '';
+		} else if ((direct == 'neckUp' || direct == 'neckDown') && yNeckLock == direct) {
 			$('#' + direct).button('toggle').mouseup();
-			yLock = '';
+			yNeckLock = '';
+		}
+		//foot
+		else if ((direct == 'footLeft' || direct == 'footRight') && xFootLock == direct) {
+			$('#' + direct).button('toggle').mouseup();
+			xFootLock = '';
+		} else if ((direct == 'footUp' || direct == 'footDown') && yFootLock == direct) {
+			$('#' + direct).button('toggle').mouseup();
+			yFootLock = '';
 		}
 	});
 
-	$('.direct-btn').mousedown(function() {
-		runNeck($(this).attr('id'));
+	$('.neck-direct-btn').mousedown(function() {
+		runNeck($(this).attr('direct'));
 	}).mouseup(function() {
 		var direct = $(this).attr('id')
-		stopNeck((direct == 'left' || direct == 'right') ? 'x' : 'y');
+		stopNeck((direct == 'neckLeft' || direct == 'neckRight') ? 'x' : 'y');
+	});
+	
+	$('.foot-direct-btn').mousedown(function() {
+		runFoot($(this).attr('direct'));
+	}).mouseup(function() {
+		var direct = $(this).attr('id')
+		stopFoot((direct == 'footLeft' || direct == 'footRight') ? 'x' : 'y');
 	});
 });

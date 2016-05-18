@@ -8,7 +8,7 @@ Created on 2016年4月14日
 import time, os
 from BaseHTTPServer import BaseHTTPRequestHandler
 
-import Eye, Neck, LightCtrl, Config
+import Eye, Neck, LightCtrl, Foot, Config
 
 
 class Brain(BaseHTTPRequestHandler):
@@ -18,6 +18,7 @@ class Brain(BaseHTTPRequestHandler):
 	ctrlCache = {}
 	cmdList = ['showCtrl', 'neck', 'eye', 'light']
 	myNeck = Neck.Neck()
+	myFoot = Foot.Foot()
 	myLightCtrl = LightCtrl.LightCtrl(1, Config.LIGHT_DEV)
 	
 	def do_GET(self):
@@ -70,6 +71,12 @@ class Brain(BaseHTTPRequestHandler):
 	def neck(self, action):
 		if len(action) > 0:
 			cmd = 'self.myNeck.' + action[0]
+			eval(cmd)()
+			self._httpSuccess()
+	
+	def foot(self, action):
+		if len(action) > 0:
+			cmd = 'self.myFoot.' + action[0]
 			eval(cmd)()
 			self._httpSuccess()
 	
