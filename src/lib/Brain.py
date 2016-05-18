@@ -16,7 +16,7 @@ class Brain(BaseHTTPRequestHandler):
 	大脑，控制一切
 	'''
 	ctrlCache = {}
-	cmdList = ['showCtrl', 'neck', 'eye', 'light']
+	cmdList = ['showCtrl', 'neck', 'foot', 'eye', 'light']
 	myNeck = Neck.Neck()
 	myFoot = Foot.Foot()
 	myLightCtrl = LightCtrl.LightCtrl(1, Config.LIGHT_DEV)

@@ -71,7 +71,6 @@ $(function() {
 	$('.foot-direct-btn').mousedown(function() {
 		runFoot($(this).attr('direct'));
 	}).mouseup(function() {
-		var direct = $(this).attr('id')
-		stopFoot((direct == 'footLeft' || direct == 'footRight') ? 'x' : 'y');
+		stopFoot();
 	});
 });

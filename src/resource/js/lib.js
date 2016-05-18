@@ -14,12 +14,12 @@ function stopNeck(axis) {
 function runFoot(direct) {
 //	console.log('[run ' + direct + ']');
 //	return;
-	$.get(neckCtrlUrl + direct);
+	$.get(footCtrlUrl + direct);
 }
-function stopFoot(axis) {
+function stopFoot() {
 //	console.log('[stop ' + axis + ']');
 //	return;
-	 $.get(neckCtrlUrl + axis + 'Stop');
+	 $.get(footCtrlUrl + 'stop');
 }
 
 function getLightStatus() {
