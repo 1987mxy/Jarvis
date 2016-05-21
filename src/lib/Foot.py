@@ -35,13 +35,6 @@ class Foot(object):
 		
 		GPIO.output(self.rPin1, GPIO.LOW)
 		GPIO.output(self.rPin2, GPIO.LOW)
-		
-	def rear(self):
-		GPIO.output(self.lPin1, GPIO.HIGH)
-		GPIO.output(self.lPin2, GPIO.LOW)
-		
-		GPIO.output(self.rPin1, GPIO.HIGH)
-		GPIO.output(self.rPin2, GPIO.LOW)
 	
 	def front(self):
 		GPIO.output(self.lPin1, GPIO.LOW)
@@ -49,6 +42,13 @@ class Foot(object):
 		
 		GPIO.output(self.rPin1, GPIO.LOW)
 		GPIO.output(self.rPin2, GPIO.HIGH)
+	
+	def rear(self):
+		GPIO.output(self.lPin1, GPIO.HIGH)
+		GPIO.output(self.lPin2, GPIO.LOW)
+		
+		GPIO.output(self.rPin1, GPIO.HIGH)
+		GPIO.output(self.rPin2, GPIO.LOW)
 	
 	def right(self):
 		GPIO.output(self.lPin1, GPIO.LOW)

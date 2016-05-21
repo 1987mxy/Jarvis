@@ -16,10 +16,10 @@ class Brain(BaseHTTPRequestHandler):
 	大脑，控制一切
 	'''
 	ctrlCache = {}
-	cmdList = ['showCtrl', 'neck', 'foot', 'eye', 'light']
-	myNeck = Neck.Neck()
-	myFoot = Foot.Foot()
-	myLightCtrl = LightCtrl.LightCtrl(1, Config.LIGHT_DEV)
+	cmdList = Config.CMD_LIST
+	myNeck = None
+	myFoot = None
+	myLightCtrl = None
 	
 	def do_GET(self):
 		print self.path
@@ -55,6 +55,8 @@ class Brain(BaseHTTPRequestHandler):
 		self._httpSuccess(indexHtml)
 	
 	def light(self, action):
+		if self.myLightCtrl == None:
+			self.myLightCtrl = LightCtrl.LightCtrl(1, Config.LIGHT_DEV)
 		if len(action) > 0:
 			if action[0] == 'status':
 				lightStatus = self.myLightCtrl.status()
@@ -69,12 +71,16 @@ class Brain(BaseHTTPRequestHandler):
 				self._httpSuccess()
 	
 	def neck(self, action):
+		if self.myNeck == None:
+			self.myNeck = Neck.Neck()
 		if len(action) > 0:
 			cmd = 'self.myNeck.' + action[0]
 			eval(cmd)()
 			self._httpSuccess()
 	
 	def foot(self, action):
+		if self.myFoot == None:
+			self.myFoot = Foot.Foot()
 		if len(action) > 0:
 			cmd = 'self.myFoot.' + action[0]
 			eval(cmd)()
