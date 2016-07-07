@@ -5,7 +5,7 @@ Created on 2016年4月14日
 @author: Free Style
 '''
 
-import time, os
+import time, os, urllib2
 from BaseHTTPServer import BaseHTTPRequestHandler
 
 import Eye, Neck, LightCtrl, Foot, Config
@@ -15,8 +15,10 @@ class Brain(BaseHTTPRequestHandler):
 	'''
 	大脑，控制一切
 	'''
-	ctrlCache = {}
+	resourceCache = {}
 	cmdList = Config.CMD_LIST
+	proxyCmdList = Config.PROXY_CMD_LIST
+	proxyDefaultHost = Config.PROXY_DEFAULT_HOST
 	myNeck = None
 	myFoot = None
 	myLightCtrl = None
@@ -36,15 +38,22 @@ class Brain(BaseHTTPRequestHandler):
 			self._httpSuccess(respContent, respHeaders)
 		elif len(pathList) < 2 or not pathList[1]:
 			self.showCtrl()
-		elif pathList[1] in self.cmdList:
-			cmd = 'self.' + pathList[1]
-			if len(pathList) > 2:
-				params = pathList[2:]
-				eval(cmd)(params)
-			else:
-				eval(cmd)()
+		elif pathList[1] in self.cmdList and pathList[1] in dir(self):
+			params = pathList[2:] if len(pathList) > 2 else None
+			self.run(pathList[1], params)
 		else:
 			self._httpNotFound()
+		
+	def run(self, action, params = None):
+		#代理转发逻辑
+		if action in self.proxyCmdList:
+			request = [self.proxyDefaultHost, action] + params
+			url = '/'.join(request)
+			#这里不是很重要就写在一起了，就是发了一个url请求，get方式
+			response = urllib2.urlopen(urllib2.Request(url)).read()
+			self._httpSuccess(response if response else None)
+		else:
+			eval('self.' + action)(params)
 		
 	def showCtrl(self):
 		userAgent = self.headers.get('User-Agent').lower()
@@ -130,8 +139,8 @@ class Brain(BaseHTTPRequestHandler):
 		self.send_response(404)
 	
 	def _readFile(self, filename):
-		if filename not in self.ctrlCache.keys():
+		if filename not in self.resourceCache.keys():
 			_tmpFile = open(filename)
-			self.ctrlCache[filename] = _tmpFile.read()
+			self.resourceCache[filename] = _tmpFile.read()
 			_tmpFile.close()
-		return self.ctrlCache[filename]
+		return self.resourceCache[filename]
