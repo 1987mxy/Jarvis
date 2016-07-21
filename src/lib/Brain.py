@@ -8,7 +8,7 @@ Created on 2016年4月14日
 import time, os, urllib2
 from BaseHTTPServer import BaseHTTPRequestHandler
 
-import Eye, Neck, LightCtrl, Foot, Config
+import WOL, Eye, Neck, LightCtrl, Foot, Config
 
 
 class Brain(BaseHTTPRequestHandler):
@@ -19,6 +19,7 @@ class Brain(BaseHTTPRequestHandler):
 	cmdList = Config.CMD_LIST
 	proxyCmdList = Config.PROXY_CMD_LIST
 	proxyDefaultHost = Config.PROXY_DEFAULT_HOST
+	myWOL = None
 	myNeck = None
 	myFoot = None
 	myLightCtrl = None
@@ -62,6 +63,15 @@ class Brain(BaseHTTPRequestHandler):
 		else:
 			indexHtml = self._readFile('./resource/index.html')
 		self._httpSuccess(indexHtml)
+	
+	def wol(self, terminal):
+		if self.myWOL == None:
+			self.myWOL = WOL.WOL(Config.BROADCASTADDR)
+		if terminal in Config.MAC_ADDR_MAP.keys():
+			self.myWOL.wakeup(Config.MAC_ADDR_MAP[terminal])
+		else:
+			self.send_response(500)
+		
 	
 	def light(self, action):
 		if self.myLightCtrl == None:
