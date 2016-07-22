@@ -17,7 +17,7 @@ class Foot(object):
 		GPIO.setmode(GPIO.BCM)
 		
 		
-		self.lPin1 = 6
+		self.lPin1 = 12
 		self.lPin2 = 13
 		GPIO.setup(self.lPin1, GPIO.OUT)
 		GPIO.setup(self.lPin2, GPIO.OUT)

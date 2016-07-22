@@ -53,8 +53,10 @@ class Brain(BaseHTTPRequestHandler):
 			#这里不是很重要就写在一起了，就是发了一个url请求，get方式
 			response = urllib2.urlopen(urllib2.Request(url)).read()
 			self._httpSuccess(response if response else None)
-		else:
+		elif params != None:
 			eval('self.' + action)(params)
+		else:
+			eval('self.' + action)()
 		
 	def showCtrl(self):
 		userAgent = self.headers.get('User-Agent').lower()
