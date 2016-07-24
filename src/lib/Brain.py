@@ -124,7 +124,6 @@ class Brain(BaseHTTPRequestHandler):
 				self.wfile.write(stream)
 				self.wfile.write('--jpgboundary\r\n')
 				self.send_response(200)
-				time.sleep(0.04)
 		except IOError as e:
 			if hasattr(e, 'errno') and e.errno == 32:
 				print 'Error: broken pipe'
