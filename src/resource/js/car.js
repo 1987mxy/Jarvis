@@ -12,7 +12,7 @@ var directKeyCode = {
 	37 : 'footLeft',
 	39 : 'footRight',
 	
-	27 : 'neckRest',	//esc
+	9 : 'neckRest',		//tab
 	87 : 'neckUp',		//w
 	83 : 'neckDown',	//s
 	65 : 'neckLeft',	//a

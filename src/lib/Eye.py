@@ -31,7 +31,7 @@ class RingBuffer(threading.Thread):
 
 """ The Eye class is a singleton implementation that wraps the
 	interface of the Raspicam """
-class Eye(threading.Thread):
+class Eye(object):
 	'''
 	眼睛，接收外界影像信息
 	'''
@@ -57,14 +57,12 @@ class Eye(threading.Thread):
 		if Eye.instance:
 			raise RuntimeError, 'Only one instance of Eye is allowed!'
 		super(Eye, self).__init__()
-		self.isRecording = True
+		self.isRecording = False
 		self.timestamp = int(round(time.time() * 1000))
 		self.semaphore = threading.BoundedSemaphore()
 		self.camera = None
 		self.prior_image = None
-		self.stream = None
 		self.buffer = RingBuffer(100)
-		self.start()
 
 	# Run the video streaming thread within the singleton instace.
 	def run(self):
@@ -105,7 +103,7 @@ class Eye(threading.Thread):
 			self.semaphore.acquire()
 			self.isRecording = True
 			self.semaphore.release()
-			self.run()
+			threading.Thread(target=self.run).start()
 		stream = ''
 		while len(stream) == 0 and self.isRecording:
 			print 'stream len:' + str(len(stream))
