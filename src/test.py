@@ -4,22 +4,21 @@ Created on 2016年1月9日
 
 @author: xiaoyong.mo
 '''
-from time import sleep
-from sys import path
-from lib.LightCtrl import LightCtrl
-path.append('./lib')
 
-
-lc = LightCtrl(1,'/dev/ttyUSB1')
-
-lc.allPowerOff()
-print 'allClose:'+str(lc.status())
-
-for i in range(1,5):
-	lc.singlePowerOn(i)
-	print str(i)+'open:'+str(lc.status())
-
-lc.allPowerOff()
-print 'allClose:'+str(lc.status())
-lc.allPowerOn()
-print 'allOpen:'+str(lc.status())
+class test(object):
+	a = None
+	def __init__(self):
+		pass
+	
+	def setA(self, av):
+		test.a = av
+		
+	def showA(self):
+		print test.a
+		
+if __name__ == '__main__':
+	t1 = test()
+	t2 = test()
+	t2.setA(3)
+	t1.setA(2)
+	t2.showA()

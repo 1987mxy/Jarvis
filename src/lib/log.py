@@ -23,6 +23,9 @@ def warning(message):
 def info(message):
 	_log(message, 'info')
 
+def debug(message):
+	_log(message)
+
 def _log(log, level='debug'):
 	global logBoundary, logLevelList, logHandleList
 	if level not in logLevelList:
@@ -35,7 +38,7 @@ def _log(log, level='debug'):
 										time.strftime('%Y%m%d', time.localtime()),
 										logLevel)
 		if logLevel not in logHandleList.keys():
-			logHandleList[logLevel] = open(logFilename, 'w+')
+			logHandleList[logLevel] = open(logFilename, 'a+')
 		if logLevel == Config.LOG_SCREEN_LEVEL:
 			print log
 		logHandleList[logLevel].write(log);

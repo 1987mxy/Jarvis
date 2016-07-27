@@ -15,10 +15,26 @@ class Neck(object):
 	# 脖子，控制摄像头的转动
 	#===========================================================================
 
+	instance = None
+	
+	# Helper class for the singleton instance.
+	class NeckHelper():
+		def __call__(self, *args, **kw):
+			# If an instance of singleton does not exist,
+			# create one and assign it to singleton.instance
+			if Neck.instance is None:
+				Neck.instance = Neck()
+			return Neck.instance
+
+	getInstance = NeckHelper()
+
 	def __init__(self):
 		#=======================================================================
 		# 创建一个脖子
 		#=======================================================================
+		# Initialize an instance of the singleton class.
+		if Neck.instance:
+			raise RuntimeError, 'Only one instance of Neck is allowed!'
 		atexit.register(GPIO.cleanup)
 		GPIO.setmode(GPIO.BCM)
 		

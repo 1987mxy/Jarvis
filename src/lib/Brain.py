@@ -5,10 +5,10 @@ Created on 2016年4月14日
 @author: Free Style
 '''
 
-import time, os, urllib2
+import os, urllib2
 from BaseHTTPServer import BaseHTTPRequestHandler
 
-import WOL, Eye, Neck, LightCtrl, Foot, Config
+import WOL, Eye, Neck, LightCtrl, Foot, Config, log
 
 
 class Brain(BaseHTTPRequestHandler):
@@ -19,31 +19,36 @@ class Brain(BaseHTTPRequestHandler):
 	cmdList = Config.CMD_LIST
 	proxyCmdList = Config.PROXY_CMD_LIST
 	proxyDefaultHost = Config.PROXY_DEFAULT_HOST
+	switch = True
+	myEye = None
 	myWOL = None
 	myNeck = None
 	myFoot = None
 	myLightCtrl = None
 	
 	def do_GET(self):
-		print self.path
+		log.debug(self.path)
 		pathList = self.path.split('/')
 		filename = './resource' + self.path
-		if os.path.isfile(filename):
-			respContent = self._readFile(filename)
-			respHeaders = {}
-			ext = os.path.splitext(filename)[-1]
-			if ext == '.css':
-				respHeaders['content-type'] = 'text/css'
-			elif ext == '.js':
-				respHeaders['content-type'] = 'application/javascript'
-			self._httpSuccess(respContent, respHeaders)
-		elif len(pathList) < 2 or not pathList[1]:
-			self.showCtrl()
-		elif pathList[1] in self.cmdList and pathList[1] in dir(self):
-			params = pathList[2:] if len(pathList) > 2 else None
-			self.run(pathList[1], params)
-		else:
-			self._httpNotFound()
+		try:
+			if os.path.isfile(filename):
+				respContent = self._readFile(filename)
+				respHeaders = {}
+				ext = os.path.splitext(filename)[-1]
+				if ext == '.css':
+					respHeaders['content-type'] = 'text/css'
+				elif ext == '.js':
+					respHeaders['content-type'] = 'application/javascript'
+				self._httpSuccess(respContent, respHeaders)
+			elif len(pathList) < 2 or not pathList[1]:
+				self.showCtrl()
+			elif pathList[1] in self.cmdList and pathList[1] in dir(self):
+				params = pathList[2:] if len(pathList) > 2 else None
+				self.run(pathList[1], params)
+			else:
+				self._httpNotFound()
+		except KeyboardInterrupt:
+			self.exit()
 		
 	def run(self, action, params = None):
 		#代理转发逻辑
@@ -93,7 +98,7 @@ class Brain(BaseHTTPRequestHandler):
 	
 	def neck(self, action):
 		if self.myNeck == None:
-			self.myNeck = Neck.Neck()
+			self.myNeck = Neck.Neck.getInstance()
 		if len(action) > 0:
 			cmd = 'self.myNeck.' + action[0]
 			eval(cmd)()
@@ -101,14 +106,15 @@ class Brain(BaseHTTPRequestHandler):
 	
 	def foot(self, action):
 		if self.myFoot == None:
-			self.myFoot = Foot.Foot()
+			self.myFoot = Foot.Foot.getInstance()
 		if len(action) > 0:
 			cmd = 'self.myFoot.' + action[0]
 			eval(cmd)()
 			self._httpSuccess()
 	
 	def eye(self):
-		Eye.Eye.getInstance()
+		if self.myEye == None:
+			self.myEye = Eye.Eye.getInstance()
 		self.send_response(200)
 		self.send_header('Pragma', 'no-cache')
 		self.send_header('Cache-Control', 'no-cache')
@@ -116,8 +122,8 @@ class Brain(BaseHTTPRequestHandler):
 		self.send_header('Content-Type', 'multipart/x-mixed-replace;boundary=jpgboundary')
 		self.end_headers()
 		try:
-			while True:
-				stream = Eye.Eye.getInstance().getStream()
+			while Brain.switch:
+				stream = self.myEye.getStream()
 				self.send_header('Content-type','image/jpeg')
 				self.send_header('Content-length', str(len(stream)))
 				self.end_headers()
@@ -126,11 +132,16 @@ class Brain(BaseHTTPRequestHandler):
 				self.send_response(200)
 		except IOError as e:
 			if hasattr(e, 'errno') and e.errno == 32:
-				print 'Error: broken pipe'
+				log.warning('Error: broken pipe') 
 				self.rfile.close()
 				return
 			else:
 				raise e
+	
+	@staticmethod
+	def exit():
+		Brain.switch = False
+		Eye.Eye.getInstance().exit()
 	
 	def _httpSuccess(self, content = None, headers = None):
 		self.send_response(200)

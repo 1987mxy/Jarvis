@@ -5,10 +5,9 @@ Created on 2016年4月14日
 @author: Free Style
 '''
 
-import time, io, picamera, random
-from threading import Thread
 from PIL import Image
-import sys, threading, collections
+import threading, collections, time, io, picamera
+import log
 
 """ The RingBuffer class provides an implementation of a ring buffer
 	for image data """
@@ -72,7 +71,7 @@ class Eye(object):
 				self.camera.resolution = (640, 480)
 				self.camera.framerate = 10
 				self.camera.quality = 5
-			print "Camera interface started..."
+			log.info("Camera interface started...")
 			stream = io.BytesIO()
 			for foo in self.camera.capture_continuous(stream, format='jpeg', use_video_port=True):
 				time.sleep(self.frameGap)
@@ -85,7 +84,7 @@ class Eye(object):
 				if int(round(time.time() * 1000)) - self.timestamp > 20000:
 					# Take the camera to sleep if it has not been used for
 					# 20 seconds.
-					print "No Client connected for 20 sec, camera set to sleep."
+					log.info("No Client connected for 20 sec, camera set to sleep.")
 					self.semaphore.acquire()
 					self.isRecording = False
 					self.semaphore.release()
@@ -99,7 +98,7 @@ class Eye(object):
 	# Get the latest image data from the MJPEG stream
 	def getStream(self):
 		self.timestamp = int(round(time.time() * 1000))
-		if(self.isRecording == False):
+		if not self.isRecording:
 			self.semaphore.acquire()
 			self.isRecording = True
 			self.semaphore.release()
@@ -109,3 +108,8 @@ class Eye(object):
 			stream = self.buffer.get()
 			time.sleep(self.frameGap)
 		return stream
+	
+	def exit(self):
+		self.semaphore.acquire()
+		self.isRecording = False
+		self.semaphore.release()

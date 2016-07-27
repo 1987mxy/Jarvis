@@ -7,7 +7,7 @@ Created on 2016年1月9日
 from BaseHTTPServer import HTTPServer
 from SocketServer import ThreadingMixIn
 
-import Brain
+import Brain, log
 
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 	''' The threaded HTTP server '''
@@ -25,8 +25,9 @@ class Ear(object):
 	def listening(self):
 		try:
 			server = ThreadedHTTPServer(('0.0.0.0', 8080), Brain.Brain)
-			print 'HTTP server started...'
+			log.info('Jarvis started...')
 			server.serve_forever()
 		except KeyboardInterrupt:
-			print 'Stopping the server!'
+			log.info('Jarvis exit!')
 			server.socket.close()
+			Brain.Brain.exit()

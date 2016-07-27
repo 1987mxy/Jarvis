@@ -11,8 +11,23 @@ class Foot(object):
 	'''
 	脚，轮子
 	'''
+	instance = None
+	
+	# Helper class for the singleton instance.
+	class FootHelper():
+		def __call__(self, *args, **kw):
+			# If an instance of singleton does not exist,
+			# create one and assign it to singleton.instance
+			if Foot.instance is None:
+				Foot.instance = Foot()
+			return Foot.instance
+
+	getInstance = FootHelper()
 
 	def __init__(self):
+		# Initialize an instance of the singleton class.
+		if Foot.instance:
+			raise RuntimeError, 'Only one instance of Foot is allowed!'
 # 		GPIO.setmode(GPIO.BOARD)
 		GPIO.setmode(GPIO.BCM)
 		
