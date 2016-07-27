@@ -106,7 +106,6 @@ class Eye(object):
 			threading.Thread(target=self.run).start()
 		stream = ''
 		while len(stream) == 0 and self.isRecording:
-			print 'stream len:' + str(len(stream))
 			stream = self.buffer.get()
 			time.sleep(self.frameGap)
 		return stream
