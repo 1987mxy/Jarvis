@@ -1,0 +1,64 @@
+@CHARSET "UTF-8";
+
+html, body {
+	overflow: hidden;
+}
+
+#light {
+	position: fixed;
+	top: 0;
+	right: 0;
+	font-size: 66px;
+	padding: 3%;
+}
+
+#light .light-btn.on {
+	color: Gold;
+	cursor: pointer;
+}
+
+#light .light-btn.off {
+	color: DimGray;
+	cursor: pointer;
+}
+
+#light .light-btn.disable {
+	color: Gainsboro;
+}
+
+#joystick {
+	position: absolute;
+	width: 100%;
+	bottom: 0;
+	padding: 3%;
+	color: ForestGreen;
+}
+
+#eye {
+	position: fixed;
+	top: 0;
+}
+
+/*direct*/
+.direct {
+	width: 198px;
+	height: 198px;
+	line-height: 0;
+}
+
+.direct .row {
+	margin: 0;
+}
+
+.direct .up, .direct .down {
+	width: 50%;
+}
+
+.direct .up .direct-btn, .direct .down .direct-btn {
+	margin-left: -33px;
+}
+
+.direct .direct-btn {
+	font-size: 66px;
+	cursor: pointer;
+}

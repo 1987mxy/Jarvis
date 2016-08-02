@@ -9,7 +9,7 @@ function runNeck(direct) {
 function stopNeck(axis) {
 //	console.log('[stop ' + axis + ']');
 //	return;
-	 $.get(neckCtrlUrl + axis + 'Stop');
+	$.get(neckCtrlUrl + axis + 'Stop');
 }
 function runFoot(direct) {
 //	console.log('[run ' + direct + ']');
@@ -19,27 +19,26 @@ function runFoot(direct) {
 function stopFoot() {
 //	console.log('[stop ' + axis + ']');
 //	return;
-	 $.get(footCtrlUrl + 'stop');
+	$.get(footCtrlUrl + 'stop');
 }
 
 function getLightStatus() {
-	$.get(lightCtrlUrl + 'status', function(switchListStatusBit){
-		$('.light-switch').each(function(){
-			var switchNo = $(this).data('switch-no'),
+	$.get(lightCtrlUrl + 'status', function (switchListStatusBit, status) {
+		if (status == 'success') {
+			$('.light-btn').each(function(){
+				var switchNo = $(this).data('light-no'),
 				switchBit = Math.pow(2, switchNo - 1),
 				switchStatus = (switchBit & switchListStatusBit) == switchBit;
-			console.log('setState',switchStatus);
-//			$(switchSelector).bootstrapSwitch('state', switchStatus);
-			$(this).bootstrapSwitch({
-				state: switchStatus,
-				onSwitchChange: function (e, isOpen) {
-					ctrlLight(switchNo, isOpen);
-				}
+				switchStatus && $(this).addClass('on');
 			});
-		});
+		} else {
+			$('.light-btn').addClass('disable');
+		}
 	});
 }
 
-function ctrlLight(switchNo, isOpen) {
-	$.get(lightCtrlUrl + 'singlePower' + (isOpen ? 'On' : 'Off') + '/' + switchNo);
+function ctrlLight(switchNo, status, callback) {
+	$.get(lightCtrlUrl + 'singlePower' + status + '/' + switchNo, function (resp, status) {
+		status == 'success' && $.isFunction(callback) && callback();
+	});
 }
