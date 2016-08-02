@@ -5,6 +5,7 @@ html, body {
 }
 
 #light {
+	z-index: 9;
 	position: fixed;
 	top: 0;
 	right: 0;
@@ -27,7 +28,8 @@ html, body {
 }
 
 #joystick {
-	position: absolute;
+	z-index: 10;
+	position: fixed;
 	width: 100%;
 	bottom: 0;
 	padding: 3%;
@@ -59,6 +61,8 @@ html, body {
 }
 
 .direct .direct-btn {
+	width: 66px;
+	height: 66px;
 	font-size: 66px;
 	cursor: pointer;
 }

@@ -68,7 +68,7 @@ class Brain(BaseHTTPRequestHandler):
 		if userAgent != None and ('ipad' in userAgent or 'iphone' in userAgent or 'android' in userAgent):
 			indexHtml = self._readFile('./resource/index.mobile.html')
 		else:
-			indexHtml = self._readFile('./resource/index.new.html')
+			indexHtml = self._readFile('./resource/index.html')
 		self._httpSuccess(indexHtml)
 	
 	def wol(self, terminal):

@@ -35,11 +35,11 @@ function direct () {
 				directList[name] = $(tpl).clone();
 			}
 			directList[name].on({
-				mousedown: function () {
+				vmousedown: function () {
 					e[$(this).data('op') + 'Down']() &&
 					$(this).attr('data-icon', $(this).data('down'));
 				},
-				mouseup: function () {
+				vmouseup: function () {
 					e[$(this).data('op') + 'Up']() &&
 					$(this).attr('data-icon', $(this).data('up'));
 				}
