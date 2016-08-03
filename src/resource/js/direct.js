@@ -30,21 +30,37 @@ function direct () {
 	var directList = [];
 	
 	var event = {
-		init: function (name, e, keyBind) {
+		init: function (name, options) {
+			var e = options.e,
+				isMobile = !!options.isMobile,
+				keyBind = options.keyBind;
 			if (directList[name] == undefined) {
 				directList[name] = $(tpl).clone();
 			}
-			directList[name].on({
-				mousedown: function () {
-					e[$(this).data('op') + 'Down']() &&
-					$(this).attr('data-icon', $(this).data('down'));
-				},
-				mouseup: function () {
-					e[$(this).data('op') + 'Up']() &&
-					$(this).attr('data-icon', $(this).data('up'));
-				}
-			}, dom.btn);
-			if (typeof keyBind != 'undefined') {
+			if (isMobile == true) {
+				directList[name].on({
+					vmousedown: function () {
+						e[$(this).data('op') + 'Down']() &&
+						$(this).attr('data-icon', $(this).data('down'));
+					},
+					vmouseup: function () {
+						e[$(this).data('op') + 'Up']() &&
+						$(this).attr('data-icon', $(this).data('up'));
+					}
+				}, dom.btn);
+			} else {
+				directList[name].on({
+					mousedown: function () {
+						e[$(this).data('op') + 'Down']() &&
+						$(this).attr('data-icon', $(this).data('down'));
+					},
+					mouseup: function () {
+						e[$(this).data('op') + 'Up']() &&
+						$(this).attr('data-icon', $(this).data('up'));
+					}
+				}, dom.btn);
+			}
+			if (keyBind != undefined) {
 				$(document).on({
 					keydown: function (event) {
 						direct = keyBind[event.which];

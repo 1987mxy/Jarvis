@@ -14,12 +14,7 @@ $(function(){
 					leftUp: function () {return neckKeyUp('left');},
 					rightUp: function () {return neckKeyUp('right');}
 				},
-				keyBind: {
-					87 : 'up',		//w
-					83 : 'down',	//s
-					65 : 'left',	//a
-					68 : 'right'	//d
-				}
+				isMobile: true
 		},
 		$neckDirect = direct().init('neck', neckDirectOptions);
 	$neckDirect.addClass('pull-left').appendTo('#joystick');
@@ -35,18 +30,11 @@ $(function(){
 					leftUp: function () {return footKeyUp('left');},
 					rightUp: function () {return footKeyUp('right');}
 				},
-				keyBind: {
-					38 : 'up',			//up
-					40 : 'down',		//down
-					37 : 'left',		//left
-					39 : 'right',		//right
-				}
+				isMobile: true
 		},
 		$footDirect = direct().init('foot', footDirectOptions);
 	$footDirect.addClass('pull-right').appendTo('#joystick');
-	$('#neckReset').click(function(){runNeck('reset');});
-	$(document).keyup(function (event) {
-		//blank space
-		event.which == 32 && runNeck('reset');
+	$('#neckReset').vclick(function(){
+		runNeck('reset');
 	});
 });

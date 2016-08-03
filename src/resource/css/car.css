@@ -36,6 +36,16 @@ html, body {
 	color: ForestGreen;
 }
 
+#joystick #neckReset {
+	width: 62px;
+	height: 62px;
+	font-size: 62px;
+	cursor: pointer;
+	margin-bottom: -124px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 #eye {
 	position: fixed;
 	top: 0;
