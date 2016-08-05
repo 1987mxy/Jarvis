@@ -34,7 +34,11 @@ $(function(){
 		},
 		$footDirect = direct().init('foot', footDirectOptions);
 	$footDirect.addClass('pull-right').appendTo('#joystick');
-	$('#neckReset').vclick(function(){
-		runNeck('reset');
+	$('#neckReset').on({
+		vclick: function () {
+			runNeck('reset');
+		}
 	});
+	
+	resetEye();
 });

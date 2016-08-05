@@ -1,6 +1,17 @@
 /**
  * 
  */
+var webWidth = null,
+	webHeight = null;
+function resetEye () {
+	var _webWidth = $(window).width(),
+		_webHeight = $(window).height();
+	if (_webWidth != _webWidth || _webHeight != webHeight) {
+		$('#eyeIframe').attr('src', '/eye/' + _webWidth + '/' + _webHeight);
+		webWidth = _webWidth;
+		webHeight = _webHeight;
+	}
+}
 
 //Neck
 var xNeckLock = '',

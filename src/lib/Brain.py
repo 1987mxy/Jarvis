@@ -112,9 +112,13 @@ class Brain(BaseHTTPRequestHandler):
 			eval(cmd)()
 			self._httpSuccess()
 	
-	def eye(self):
+	def eye(self, options = None):
 		if self.myEye == None:
 			self.myEye = Eye.Eye.getInstance()
+		if options != None and len(options) >=2:
+			width, height = options[:2]
+		else:
+			width = height = None
 		self.send_response(200)
 		self.send_header('Pragma', 'no-cache')
 		self.send_header('Cache-Control', 'no-cache')
@@ -123,7 +127,7 @@ class Brain(BaseHTTPRequestHandler):
 		self.end_headers()
 		try:
 			while Brain.switch:
-				stream = self.myEye.getStream()
+				stream = self.myEye.getStream(width, height)
 				self.send_header('Content-type','image/jpeg')
 				self.send_header('Content-length', str(len(stream)))
 				self.end_headers()
