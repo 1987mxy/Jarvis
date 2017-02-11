@@ -56,7 +56,7 @@ function stopNeck(axis) {
 //Foot
 var footLock = '',
 	footPrefix = 'foot-';
-function footDown (direct) {
+function footKeyDown (direct) {
 	if ((direct == 'front' ||
 			direct == 'rear' ||
 			direct == 'left' ||
@@ -67,7 +67,7 @@ function footDown (direct) {
 	}
 	return false;
 }
-function footUp (direct) {
+function footKeyUp (direct) {
 	if (footLock == footPrefix + direct) {
 		stopFoot();
 		footLock = '';
